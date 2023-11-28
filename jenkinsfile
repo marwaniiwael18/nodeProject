@@ -31,14 +31,19 @@ pipeline{
     
   }
 
-  stage('Initialize Docker'){
-
-    steps{
-        def dockerHome = tool 'Docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
+  stage('Initialize Docker') {
+    steps {
+        script {
+            def dockerHome = tool name: 'Docker'
+            if (dockerHome) {
+                env.PATH = "${dockerHome}/bin:${env.PATH}"
+            } else {
+                error "Docker tool not found. Please configure it in Jenkins."
+            }
+        }
     }
+}
 
-  }
     // Building Docker images
     stage('Building image') {
       steps{
