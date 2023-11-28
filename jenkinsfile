@@ -1,6 +1,11 @@
 pipeline{
   agent any
-  
+  environment {
+        imageName = "mynodeapp"
+        registryCredentials = "nexus"
+        registry = "http://localhost:8081/repository/docker-hosted/"
+        dockerImage = ''
+    }
   stages {
 
     stage("npm install"){
@@ -25,6 +30,25 @@ pipeline{
       }
     
   }
+    // Building Docker images
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imageName
+        }
+      }
+    }
+
+      // Uploading Docker images into Nexus Registry
+    stage('Uploading to Nexus') {
+     steps{  
+         script {
+             docker.withRegistry( 'http://'+registry, registryCredentials ) {
+             dockerImage.push('latest')
+          }
+        }
+      }
+    }
 
  stage("test"){
       steps{
