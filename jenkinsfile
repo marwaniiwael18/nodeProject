@@ -34,9 +34,10 @@ pipeline{
   stage('Initialize Docker') {
     steps {
         script {
-            def dockerHome = tool name: 'Docker'
+            def dockerHome = tool name: 'docker'
             if (dockerHome) {
                 env.PATH = "${dockerHome}/bin:${env.PATH}"
+                echo dockerHome
             } else {
                 error "Docker tool not found. Please configure it in Jenkins."
             }
