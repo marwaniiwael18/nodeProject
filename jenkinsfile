@@ -8,28 +8,28 @@ pipeline{
     }
   stages {
 
-    stage("npm install"){
-      steps{
+  //   stage("npm install"){
+  //     steps{
 
-        echo 'Executing npm . . .'
-        nodejs('Node-18.14.0'){
-          sh 'npm install'
+  //       echo 'Executing npm . . .'
+  //       nodejs('Node-18.14.0'){
+  //         sh 'npm install'
 
-        }
-      }
-    }
-     stage('SonarQube Analysis') {
-      steps{
-      script {
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
+  //       }
+  //     }
+  //   }
+  //    stage('SonarQube Analysis') {
+  //     steps{
+  //     script {
+  //                   def scannerHome = tool 'scanner'
+  //                   withSonarQubeEnv {
+  //                       sh "${scannerHome}/bin/sonar-scanner"
+  //                   }
+  //               }
 
-      }
+  //     }
     
-  }
+  // }
 
   stage('Initialize Docker') {
     steps {
