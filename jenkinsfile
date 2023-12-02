@@ -3,9 +3,9 @@ pipeline{
   environment {
         // DOCKER_HOST = 'tcp://192.168.1.6:2375'
 
-        imageName = "mynodeapp"
+        imageName = "testimage"
         registryCredentials = "nexus"
-        registry = "tcp://localhost:2375"
+        registry = "127.0.0.1:8085/docker-hosted"
         dockerImage = ''
          
     }
@@ -73,6 +73,7 @@ pipeline{
     stage('Uploading to Nexus') {
      steps{  
          script {
+          
              docker.withRegistry( 'http://'+registry, registryCredentials ) {
              dockerImage.push('latest')
           }
