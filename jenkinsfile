@@ -5,7 +5,7 @@ pipeline{
 
         imageName = "mynodeapp"
         registryCredentials = "nexus"
-        registry = "127.0.0.1:8081/"
+        registry = "127.0.0.1:8083/"
         dockerImage = ''
          
     }
