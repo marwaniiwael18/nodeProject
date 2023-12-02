@@ -8,76 +8,101 @@ pipeline{
     }
   stages {
 
-    stage("npm install"){
-      steps{
+    // stage("npm install"){
+    //   steps{
 
-        echo 'Executing npm . . .'
-        nodejs('Node-18.14.0'){
-          sh 'npm install'
+    //     echo 'Executing npm . . .'
+    //     nodejs('Node-18.14.0'){
+    //       sh 'npm install'
 
-        }
-      }
-    }
-     stage('SonarQube Analysis') {
-      steps{
-      script {
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv {
-                        sh "${scannerHome}/bin/sonar-scanner"
+    //     }
+    //   }
+    // }
+  //    stage('SonarQube Analysis') {
+  //     steps{
+  //     script {
+  //                   def scannerHome = tool 'scanner'
+  //                   withSonarQubeEnv {
+  //                       sh "${scannerHome}/bin/sonar-scanner"
+  //                   }
+  //               }
+
+  //     }
+    
+  // }
+
+//   stage('Initialize Docker') {
+//     steps {
+//         script {
+//             def dockerHome = tool name: 'docker'
+//             if (dockerHome) {
+//                 env.PATH = "${dockerHome}/bin:${env.PATH}"
+//                 echo dockerHome
+//             } else {
+//                 error "Docker tool not found. Please configure it in Jenkins."
+//             }
+//         }
+//     }
+// }
+
+  stage('Build Docker Image with Kaniko') {
+            steps {
+                script {
+           
+
+                    // Set up Kaniko executor container
+                    container('gcr.io/kaniko-project/executor:latest') {
+                        // Nexus registry to push the image
+                        def nexusRegistry = 'http://localhost:8081/repository/docker-private-repo/'
+                        def imageName = 'image1'
+                        def imageTag = '01'
+
+                        // Nexus authentication credentials
+                        def nexusUsername = 'admin'
+                        def nexusPassword = '21721488m'
+
+                        // Kaniko command to build and push the Docker image to Nexus
+                        sh """
+                            /kaniko/executor --context . --destination=${nexusRegistry}/${imageName}:${imageTag} --insecure --dockerconfig=/kaniko/.docker/config.json
+                        """
                     }
                 }
-
-      }
-    
-  }
-
-  stage('Initialize Docker') {
-    steps {
-        script {
-            def dockerHome = tool name: 'docker'
-            if (dockerHome) {
-                env.PATH = "${dockerHome}/bin:${env.PATH}"
-                echo dockerHome
-            } else {
-                error "Docker tool not found. Please configure it in Jenkins."
             }
         }
-    }
-}
 
-    // Building Docker images
-    stage('Building image') {
-      steps{
+    // // Building Docker images
+    // stage('Building image') {
+    //   steps{
         
-        script {
-          dockerImage = docker.build imageName
-        }
-      }
-    }
+    //     script {
+    //       dockerImage = docker.build imageName
+    //     }
+    //   }
+    // }
 
-      // Uploading Docker images into Nexus Registry
-    stage('Uploading to Nexus') {
-     steps{  
-         script {
-             docker.withRegistry( 'http://'+registry, registryCredentials ) {
-             dockerImage.push('latest')
-          }
-        }
-      }
-    }
+    //   // Uploading Docker images into Nexus Registry
+    // stage('Uploading to Nexus') {
+    //  steps{  
+    //      script {
+    //          docker.withRegistry( 'http://'+registry, registryCredentials ) {
+    //          dockerImage.push('latest')
+    //       }
+    //     }
+    //   }
+    // }
 
- stage("test"){
-      steps{
+//  stage("test"){
+//       steps{
 
-        echo "Testingg . . ."
-      }
-    }
-     stage("Deploy"){ 
-      steps{
+//         echo "Testingg . . ."
+//       }
+//     }
+//      stage("Deploy"){ 
+//       steps{
 
-        echo "Deployingg. . ."
-      }
-    }
+//         echo "Deployingg. . ."
+//       }
+//     }
     
   }
 
