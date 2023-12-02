@@ -34,30 +34,30 @@ pipeline{
     
   // }
 
-  stage('Initialize Docker') {
-    steps {
-        script {
-            def dockerHome = tool name: 'docker'
-            if (dockerHome) {
-                env.PATH = "${dockerHome}/bin:${env.PATH}"
-                echo dockerHome
-            } else {
-                error "Docker tool not found. Please configure it in Jenkins."
-            }
-        }
-    }
-}
- stage('Build and Run Docker') {
-            steps {
-                script {
-                    docker.image('docker').inside {
-                        // Your Docker commands here
-                        sh 'docker build -t test .'
-                        sh 'docker run -p 8080:80 test'
-                    }
-                }
-            }
-        }
+//   stage('Initialize Docker') {
+//     steps {
+//         script {
+//             def dockerHome = tool name: 'docker'
+//             if (dockerHome) {
+//                 env.PATH = "${dockerHome}/bin:${env.PATH}"
+//                 echo dockerHome
+//             } else {
+//                 error "Docker tool not found. Please configure it in Jenkins."
+//             }
+//         }
+//     }
+// }
+//  stage('Build and Run Docker') {
+//             steps {
+//                 script {
+//                     docker.image('docker').inside {
+//                         // Your Docker commands here
+//                         sh 'docker build -t test .'
+//                         sh 'docker run -p 8080:80 test'
+//                     }
+//                 }
+//             }
+//         }
 
     // Building Docker images
     stage('Building image') {
