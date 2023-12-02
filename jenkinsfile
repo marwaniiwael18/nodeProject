@@ -53,13 +53,7 @@ pipeline{
                     // Set up Kaniko executor container
                     container('gcr.io/kaniko-project/executor:latest') {
                         // Nexus registry to push the image
-                        def nexusRegistry = 'http://localhost:8081/repository/docker-private-repo/'
-                        def imageName = 'image1'
-                        def imageTag = '01'
-
-                        // Nexus authentication credentials
-                        def nexusUsername = 'admin'
-                        def nexusPassword = '21721488m'
+                       
 
                         // Kaniko command to build and push the Docker image to Nexus
                         sh """
