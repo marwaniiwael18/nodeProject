@@ -1,9 +1,8 @@
 pipeline{
   agent any
   environment {
-        // DOCKER_HOST = 'tcp://192.168.1.6:2375'
 
-        imageName = "testimage"
+        imageName = "testNodeimage"
         registryCredentials = "nexus"
         registry = "127.0.0.1:8085/docker-hosted"
         dockerImage = ''
@@ -70,16 +69,16 @@ pipeline{
     }
 
       // Uploading Docker images into Nexus Registry
-    stage('Uploading to Nexus') {
-     steps{  
-         script {
+    // stage('Uploading to Nexus') {
+    //  steps{  
+    //      script {
           
-             docker.withRegistry( 'http://'+registry, registryCredentials ) {
-             dockerImage.push('latest')
-          }
-        }
-      }
-    }
+    //          docker.withRegistry( 'http://'+registry, registryCredentials ) {
+    //          dockerImage.push('latest')
+    //       }
+    //     }
+    //   }
+    // }
 
  stage("test"){
       steps{
