@@ -4,7 +4,7 @@ pipeline{
 
         imageName = "testnodeimage"
         registryCredentials = "nexus"
-        registry = "127.0.0.1:8085/docker-hosted"
+        registry = "192.168.33.10:8081/repository/docker-repo/"
         dockerImage = ''
          
     }
@@ -69,16 +69,16 @@ pipeline{
     }
 
       // Uploading Docker images into Nexus Registry
-    // stage('Uploading to Nexus') {
-    //  steps{  
-    //      script {
+    stage('Uploading to Nexus') {
+     steps{  
+         script {
           
-    //          docker.withRegistry( 'http://'+registry, registryCredentials ) {
-    //          dockerImage.push('latest')
-    //       }
-    //     }
-    //   }
-    // }
+             docker.withRegistry( 'http://'+registry, registryCredentials ) {
+             dockerImage.push('latest')
+          }
+        }
+      }
+    }
 
  stage("test"){
       steps{
