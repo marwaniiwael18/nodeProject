@@ -63,22 +63,22 @@ pipeline{
       steps{
         
         script {
-         sh('docker build -t testnn:1.0 .')
+         sh('docker build -t 192.168.33.10:8083/node_app:2.0 .')
         }
       }
     }
 
-      // Uploading Docker images into Nexus Registry
-    // stage('Uploading to Nexus') {
-    //  steps{  
-    //      script {
+    //  Uploading Docker images into Nexus Registry
+    stage('Uploading image to Nexus') {
+     steps{  
+         script {
           
-    //          docker.withRegistry( 'http://'+registry, registryCredentials ) {
-    //          dockerImage.push('latest')
-    //       }
-    //     }
-    //   }
-    // }
+             docker.withRegistry(registry, registryCredentials ) {
+            sh('docker push 192.168.33.10:8083/node_app:2.0 ')
+          }
+        }
+      }
+    }
 
  stage("test"){
       steps{
