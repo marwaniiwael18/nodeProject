@@ -63,7 +63,7 @@ pipeline{
       steps{
         
         script {
-         sh(f'docker build -t {registry}/node_app:3.0 .')
+         sh('docker build -t $registry/node_app:3.0 .')
         }
       }
     }
@@ -74,7 +74,7 @@ pipeline{
          script {
           
              docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh(f'docker push {registry}/node_app:3.0 ')
+            sh('docker push $registry/node_app:3.0 ')
           }
         }
       }
