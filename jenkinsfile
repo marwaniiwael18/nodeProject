@@ -4,7 +4,7 @@ pipeline{
 
         imageName = "testnodeimage"
         registryCredentials = "nexus"
-        registry = "http://192.168.33.10:8083"
+        registry = "192.168.33.10:8083"
         dockerImage = ''
          
     }
@@ -63,7 +63,7 @@ pipeline{
       steps{
         
         script {
-         sh('docker build -t 192.168.33.10:8083/node_app:2.0 .')
+         sh(f'docker build -t {registry}/node_app:3.0 .')
         }
       }
     }
@@ -73,8 +73,8 @@ pipeline{
      steps{  
          script {
           
-             docker.withRegistry(registry, registryCredentials ) {
-            sh('docker push 192.168.33.10:8083/node_app:2.0 ')
+             docker.withRegistry("http://"+registry, registryCredentials ) {
+            sh(f'docker push {registry}/node_app:3.0 ')
           }
         }
       }
