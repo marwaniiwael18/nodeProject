@@ -4,7 +4,7 @@ pipeline{
 
         imageName = "testnodeimage"
         registryCredentials = "nexus"
-        registry = "192.168.33.10:8083"
+        registry = "http://192.168.33.10:8083"
         dockerImage = ''
          
     }
