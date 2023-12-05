@@ -10,16 +10,7 @@ pipeline{
     }
   stages {
 
-  //   stage("npm install"){
-  //     steps{
-
-  //       echo 'Executing npm . . .'
-  //       nodejs('Node-18.14.0'){
-  //         sh 'npm install'
-
-  //       }
-  //     }
-  //   }
+ 
   //    stage('SonarQube Analysis') {
   //     steps{
   //     script {
@@ -33,37 +24,15 @@ pipeline{
     
   // }
 
-//   stage('Initialize Docker') {
-//     steps {
-//         script {
-//             def dockerHome = tool name: 'docker'
-//             if (dockerHome) {
-//                 env.PATH = "${dockerHome}/bin:${env.PATH}"
-//                 echo dockerHome
-//             } else {
-//                 error "Docker tool not found. Please configure it in Jenkins."
-//             }
-//         }
-//     }
-// }
-//  stage('Build and Run Docker') {
-//             steps {
-//                 script {
-//                     docker.image('docker').inside {
-//                         // Your Docker commands here
-//                         sh 'docker build -t test .'
-//                         sh 'docker run -p 8080:80 test'
-//                     }
-//                 }
-//             }
-//         }
+
+
 
     // Building Docker images
-    stage('Building image') {
+    stage('Building image (node and mongo)') {
       steps{
         
         script {
-         sh('docker build -t $registry/node_app:3.0 .')
+         sh('docker-compose build')
         }
       }
     }
@@ -74,7 +43,7 @@ pipeline{
          script {
           
              docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker push $registry/node_app:3.0 ')
+            sh('docker-compose push $registry/nodemongoapp:4.0 ')
           }
         }
       }
