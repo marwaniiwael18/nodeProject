@@ -38,7 +38,7 @@ app.post('/products', async (req, res) => {    //http://localhost:3000/products/
         const {name, price, quantity} = req.body;
         const product = new Product({name, price, quantity});
         await product.save();
-        res.json({success: true});
+        res.status(201).json({success: true});
     }
     catch (error) {
         res.status(500).send(error.message);
