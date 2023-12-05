@@ -5,7 +5,7 @@ const Product = require('./product');
 const app = express();
 app.use(express.json());
 
-connectDB();
+
 
 
 
@@ -70,8 +70,4 @@ app.delete('/products/:id', async (req, res) => {    //http://localhost:3000/pro
 });
 
 
-const port = 5000;
-
-app.listen(port, () => {
-    console.log("API server started on port 5000");
-})
+module.exports = app;
