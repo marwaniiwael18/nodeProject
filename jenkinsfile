@@ -33,7 +33,7 @@ stage('Unit Test') {
       steps{
       script {
 
-        sh('sudo docker start sonar ')
+        sh(' docker start sonar ')
                     def scannerHome = tool 'scanner'
                     withSonarQubeEnv {
                         sh "${scannerHome}/bin/sonar-scanner"
@@ -62,7 +62,7 @@ stage('Unit Test') {
     stage('Deploy  to Nexus') {
      steps{  
          script {
-            sh('sudo docker start nexus ')
+            sh(' docker start nexus ')
 
              docker.withRegistry("http://"+registry, registryCredentials ) {
             sh('docker push $registry/nodemongoapp:4.0 ')
@@ -87,13 +87,13 @@ stage('Unit Test') {
  stage("Run Prometheus"){
       steps{
 
-        sh('sudo docker start prometheus')
+        sh(' docker start prometheus')
       }
     }
      stage("Run Grafana"){ 
       steps{
 
-        sh('sudo docker start grafana')
+        sh(' docker start grafana')
       }
     }
     
