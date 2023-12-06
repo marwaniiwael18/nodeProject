@@ -46,39 +46,39 @@ stage('Unit Test') {
 
 
 
-    // Building Docker images
-    stage('Building image (node and mongo)') {
-      steps{
+    // // Building Docker images
+    // stage('Building image (node and mongo)') {
+    //   steps{
         
-        script {
-         sh('docker-compose build')
-        }
-      }
-    }
+    //     script {
+    //      sh('docker-compose build')
+    //     }
+    //   }
+    // }
 
-    //  Uploading Docker images into Nexus Registry
-    stage('Uploading image to Nexus') {
-     steps{  
-         script {
+    // //  Uploading Docker images into Nexus Registry
+    // stage('Uploading image to Nexus') {
+    //  steps{  
+    //      script {
           
-             docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker push $registry/nodemongoapp:4.0 ')
-          }
-        }
-      }
-    }
+    //          docker.withRegistry("http://"+registry, registryCredentials ) {
+    //         sh('docker push $registry/nodemongoapp:4.0 ')
+    //       }
+    //     }
+    //   }
+    // }
 
 
-       stage('Run application ') {
-     steps{  
-         script {
+    //    stage('Run application ') {
+    //  steps{  
+    //      script {
           
-             docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker-compose up -d ')
-          }
-        }
-      }
-    }
+    //          docker.withRegistry("http://"+registry, registryCredentials ) {
+    //         sh('docker-compose up -d ')
+    //       }
+    //     }
+    //   }
+    // }
 
 
  stage("test"){
