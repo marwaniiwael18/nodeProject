@@ -62,7 +62,8 @@ stage('Unit Test') {
     stage('Deploy  to Nexus') {
      steps{  
          script {
-          
+            sh('sudo docker start nexus ')
+
              docker.withRegistry("http://"+registry, registryCredentials ) {
             sh('docker push $registry/nodemongoapp:4.0 ')
           }
