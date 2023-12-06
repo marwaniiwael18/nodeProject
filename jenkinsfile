@@ -32,6 +32,8 @@ stage('Unit Test') {
      stage('SonarQube Analysis') {
       steps{
       script {
+
+        sh('sudo docker start sonar ')
                     def scannerHome = tool 'scanner'
                     withSonarQubeEnv {
                         sh "${scannerHome}/bin/sonar-scanner"
