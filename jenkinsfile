@@ -33,9 +33,10 @@ stage('Unit Test') {
       steps{
       script {
 
-        sh(' docker start sonar ')
                     def scannerHome = tool 'scanner'
                     withSonarQubeEnv {
+                        sh('docker start sonar ')
+
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
