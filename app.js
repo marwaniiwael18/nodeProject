@@ -7,7 +7,12 @@ app.use(express.json());
 
 
 
+app.get('/', async (req, res) => {
 
+        res.send("Hello UP Web " );
+    
+    
+});
 
 app.get('/products', async (req, res) => {
     try {

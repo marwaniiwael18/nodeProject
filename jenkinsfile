@@ -29,78 +29,96 @@ stage('Unit Test') {
         }
       }
     }
-     stage('SonarQube Analysis') {
-      steps{
-      script {
+  //    stage('SonarQube Analysis') {
+  //     steps{
+  //     script {
 
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv {
+  //                   def scannerHome = tool 'scanner'
+  //                   withSonarQubeEnv {
 
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
+  //                       sh "${scannerHome}/bin/sonar-scanner"
+  //                   }
+  //               }
 
-      }
+  //     }
     
-  }
+  // }
 
+stage('Build application') {
+      steps{
+        
+        script {
+         sh('npm run build-dev')
+        }
+      }
+    }
+
+    
+stage('Run application') {
+      steps{
+        
+        script {
+         sh('npm start ')
+        }
+      }
+    }
 
 
 
 
     // Building Docker images
-    stage('Building image (node and mongo)') {
-      steps{
+//     stage('Building image (node and mongo)') {
+//       steps{
         
-        script {
-         sh('docker-compose build')
-        }
-      }
-    }
+//         script {
+//          sh('docker-compose build')
+//         }
+//       }
+//     }
 
-    //  Uploading Docker images into Nexus Registry
-    stage('Deploy  to Nexus') {
-     steps{  
-         script {
+//     //  Uploading Docker images into Nexus Registry
+//     stage('Deploy  to Nexus') {
+//      steps{  
+//          script {
 
-             docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker push $registry/nodemongoapp:4.0 ')
-          }
-        }
-      }
-    }
+//              docker.withRegistry("http://"+registry, registryCredentials ) {
+//             sh('docker push $registry/nodemongoapp:4.0 ')
+//           }
+//         }
+//       }
+//     }
 
 
-       stage('Run application ') {
-     steps{  
-         script {
+//        stage('Run application ') {
+//      steps{  
+//          script {
           
-             docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker-compose up -d ')
-          }
-        }
-      }
-    }
+//              docker.withRegistry("http://"+registry, registryCredentials ) {
+//             sh('docker-compose up -d ')
+//           }
+//         }
+//       }
+//     }
 
 
- stage("Run Prometheus"){
-      steps{
+//  stage("Run Prometheus"){
+//       steps{
 
-        script{
+//         script{
 
-        sh('docker start prometheus')
+//         sh('docker start prometheus')
 
-        }
-      }
-    }
-     stage("Run Grafana"){ 
-      steps{
+//         }
+//       }
+//     }
+//      stage("Run Grafana"){ 
+//       steps{
 
-        script{
-        sh('docker start grafana')
-        }
-      }
-    }
+//         script{
+//         sh('docker start grafana')
+//         }
+//       }
+//     }
     
   }
 

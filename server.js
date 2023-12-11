@@ -8,8 +8,7 @@ const server = express();
 
 connectDB();
 
-// middleware defitions
-// parse requests of content-type - application/json
+
 server.use("/api", productRoutes); //CRUD routes
 
 
