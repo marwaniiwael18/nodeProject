@@ -40,14 +40,14 @@ pipeline{
     //           }  
     //         }
 
-stage('Build application') {
-      steps{
+// stage('Build application') {
+//       steps{
         
-        script {
-         sh('npm run build-dev')
-        }
-      }
-    }
+//         script {
+//          sh('npm run build-dev')
+//         }
+//       }
+//     }
 
 
 
@@ -68,11 +68,24 @@ stage('Build application') {
          script {
 
              docker.withRegistry("http://"+registry, registryCredentials ) {
-            sh('docker push $registry/nodemongoapp:5.0 ')
+            sh('docker push $registry/nodemongoapp:6.0 ')
           }
         }
       }
     }
-  }
-}
+
+     stage('Run application ') {
+     steps{  
+         script {
+          
+            sh('docker pull $registry/nodemongoapp:6.0 ')
+
+            //  docker.withRegistry("http://"+registry, registryCredentials ) {
+            sh('docker-compose up -d ')
+          }
+        }
+      }
+    }
+  } 
+
 

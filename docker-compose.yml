@@ -13,7 +13,7 @@ services:
 
   app:
     build: .
-    image: 192.168.33.10:8083/nodemongoapp:5.0
+    image: 192.168.33.10:8083/nodemongoapp:6.0
     restart: always
     ports:
       - '5000:5000'
