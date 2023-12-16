@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   db:
-    image: mongo
+    image: nertworkweb/mongodb-no-avx:latest
     container_name: db
-    restart: unless-stopped
+    restart: always
 
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
