@@ -3,6 +3,8 @@ services:
   db:
     image: mongo
     container_name: db
+    restart: unless-stopped
+
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
