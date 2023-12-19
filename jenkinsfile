@@ -2,23 +2,13 @@
 pipeline{
   agent any
 
-
- options {
-        skipDefaultCheckout(true) // Skip the default checkout behavior
-    }
   environment {
         registryCredentials = "nexus"
         registry = "192.168.33.10:8083"
     }
    
   stages {
-    stage('Checkout GIT') {
-            steps { 
-                script {
-                    checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, userRemoteConfigs: [[url: 'https://github.com/mehdybenromdhane/nodeProject']]])
-                }
-            }
-        }
+
   stage('Install dependencies') {
       steps{
         
