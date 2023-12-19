@@ -3,14 +3,22 @@ pipeline{
   agent any
 
 
-
+ options {
+        skipDefaultCheckout(true) // Skip the default checkout behavior
+    }
   environment {
         registryCredentials = "nexus"
         registry = "192.168.33.10:8083"
     }
-  
+   
   stages {
-    
+    stage('Checkout GIT') {
+            steps { 
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, userRemoteConfigs: [[url: 'https://github.com/mehdybenromdhane/nodeProject']]])
+                }
+            }
+        }
   stage('Install dependencies') {
       steps{
         
@@ -20,34 +28,34 @@ pipeline{
       }
     }
 
-// stage('Unit Test') {
-//       steps{
+stage('Unit Test') {
+      steps{
         
-//         script {
-//          sh('npm test')
-//         }
-//       }
-//     }
+        script {
+         sh('npm test')
+        }
+      }
+    }
 
-    // stage('SonarQube Analysis') {
-    //   steps{
-    //   script {  
-    //                 def scannerHome = tool 'scanner'
-    //                 withSonarQubeEnv {
-    //                 sh "${scannerHome}/bin/sonar-scanner"
-    //                     }
-    //             } 
-    //           }  
-    //         }
+    stage('SonarQube Analysis') {
+      steps{
+      script {  
+                    def scannerHome = tool 'scanner'
+                    withSonarQubeEnv {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                } 
+              }  
+            }
 
-// stage('Build application') {
-//       steps{
+stage('Build application') {
+      steps{
         
-//         script {
-//          sh('npm run build-dev')
-//         }
-//       }
-//     }
+        script {
+         sh('npm run build-dev')
+        }
+      }
+    }
 
 
 
