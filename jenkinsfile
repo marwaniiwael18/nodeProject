@@ -1,120 +1,121 @@
-
 pipeline{
   agent any
 
   environment {
-        registryCredentials = "nexus"
-        registry = "172.17.0.2:8083"
-        imageName = "nodemongoapp"
-        imageTag = "6.0-SNAPSHOT-${env.BUILD_NUMBER}" // Génère un tag unique
-    }
+      registryCredentials = "nexus"
+      registry = "172.17.0.2:8083"
+      imageName = "nodemongoapp"
+      imageTag = "6.0-SNAPSHOT-${env.BUILD_NUMBER}"
+      // Define credential variables for direct access
+      NEXUS_CREDENTIALS = credentials('nexus')
+  }
 
-   
   stages {
-
- stage('Checkout Code') {
-            steps {
-                script {
-                    git branch: 'main', url: 'https://github.com/Aymenjallouli/Devops.git'
-                    sh 'ls -l'  // Vérifier si les fichiers sont bien présents
-                }
+    stage('Checkout Code') {
+        steps {
+            script {
+                git branch: 'main', url: 'https://github.com/marwaniiwael18/nodeProject'
+                sh 'ls -l'
             }
         }
-  stage('Install dependencies') {
-      steps{
-        
+    }
+    
+    stage('Install dependencies') {
+      steps {
         script {
-         sh('npm install')
+          sh('npm install')
         }
       }
     }
 
-stage('Unit Test') {
-      steps{
-        
+    stage('Unit Test') {
+      steps {
         script {
-         sh('npm test')
+          sh('npm test')
         }
       }
     }
 
     stage('SonarQube Analysis') {
-      steps{
-      script {  
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                        }
-                } 
-              }  
-            }
+      steps {
+        script {  
+          def scannerHome = tool 'scanner'
+          withSonarQubeEnv {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+        } 
+      }  
+    }
 
-stage('Build application') {
-      steps{
-        
+    stage('Build application') {
+      steps {
         script {
-         sh('npm run build-dev')
+          sh('npm run build-dev')
         }
       }
     }
 
-
-
-        // Building Docker images
-  stage('Building images (node and mongo)') {
-    steps {
+    stage('Building images (node and mongo)') {
+      steps {
         script {
-            sh 'ls -l'  // Vérifier que Dockerfile est bien présent
-            sh "docker build -t $registry/$imageName:$imageTag ."
+          sh 'ls -l'
+          sh "docker build -t $registry/$imageName:$imageTag ."
         }
+      }
     }
-}
 
-
-
-   stage('deply to  Nexus') {
-            steps {
-                script {
-                    docker.withRegistry("http://$registry", registryCredentials) {
-                        sh "docker push $registry/$imageName:$imageTag"
-                    }
-                }
-            }
-        }
-
-  stage('Run Application') {
-    steps {
+    stage('Deploy to Nexus') {
+      steps {
         script {
-            docker.withRegistry("http://$registry", registryCredentials) {
-                sh "docker pull $registry/$imageName:$imageTag"
-
-                // Remplacement dynamique de IMAGE_TAG dans docker-compose.yml
-                sh "sed -i 's|IMAGE_TAG|$imageTag|g' docker-compose.yml"
-
-                // Vérifier le fichier après modification
-                sh "cat docker-compose.yml"
-
-                // Redémarrer l'application proprement
-                sh "docker-compose down || true"
-                sh "docker-compose up -d"
-            }
+          // Direct login approach to avoid timeout issues
+          sh "echo '${NEXUS_CREDENTIALS_PSW}' | docker login http://$registry -u ${NEXUS_CREDENTIALS_USR} --password-stdin"
+          
+          // Push the image
+          sh "docker push $registry/$imageName:$imageTag"
+          
+          // Logout when done
+          sh "docker logout http://$registry"
         }
+      }
     }
-}
 
-        stage("Run prometheus") {
-            steps {
-                script {
-                    sh 'docker start prometheus || docker run -d --name prometheus prom/prometheus'
-                   }
-            }
+    stage('Run Application') {
+      steps {
+        script {
+          // Direct login approach
+          sh "echo '${NEXUS_CREDENTIALS_PSW}' | docker login http://$registry -u ${NEXUS_CREDENTIALS_USR} --password-stdin"
+          
+          // Pull the image
+          sh "docker pull $registry/$imageName:$imageTag"
+
+          // Update docker-compose file
+          sh "sed -i 's|IMAGE_TAG|$imageTag|g' docker-compose.yml"
+          sh "cat docker-compose.yml"
+
+          // Restart application
+          sh "docker-compose down || true"
+          sh "docker-compose up -d"
+          
+          // Logout when done
+          sh "docker logout http://$registry"
         }
-        stage("Run grafana") {
-            steps {
-                script {
-                    sh 'docker start grafana || docker run -d --name grafana grafana/grafana'
-                }
-            }
-        }
+      }
     }
+
+    stage("Run prometheus") {
+      steps {
+        script {
+          sh 'docker start prometheus || docker run -d --name prometheus prom/prometheus'
+        }
+      }
+    }
+    
+    stage("Run grafana") {
+      steps {
+        script {
+          sh 'docker start grafana || docker run -d --name grafana grafana/grafana'
+        }
+      }
+    }
+  }
 }
