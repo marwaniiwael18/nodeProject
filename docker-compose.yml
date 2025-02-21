@@ -14,7 +14,7 @@ services:
       - ./data/dump:/dump
 
   app:
-    image: 192.168.100.47:8083/nodemongoapp:IMAGE_TAG  # Placeholder pour le tag dynamique
+    image: 192.168.100.48:8083/nodemongoapp:IMAGE_TAG  # Placeholder pour le tag dynamique
     container_name: back
     restart: always
     ports:
