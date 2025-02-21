@@ -4,7 +4,7 @@ pipeline{
 
   environment {
         registryCredentials = "nexus"
-        registry = "localhost:8083"
+        registry = "172.17.0.2:8083"
     }
    
   stages {
@@ -106,5 +106,3 @@ stage('Build application') {
   } 
 
 }
-
-
